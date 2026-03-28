@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Virtual environments
+venv/
+.venv/
+
+# UV caches
+.uv-cache/
+hive/.uv-cache/
+
+# Local Hive runtime data
+.hive_agents/
+
+# Build artifacts
+dist/
+
+# Local framework checkout
+hive/
+
+# OS files
+.DS_Store

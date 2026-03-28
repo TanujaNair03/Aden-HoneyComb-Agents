@@ -1,0 +1,166 @@
+{
+  "agent": {
+    "id": "analytical_advisor",
+    "name": "Analytical Advisor",
+    "version": "1.0.0",
+    "description": "A Principal Data Scientist agent that recommends suitable analytical techniques, surfaces statistical assumptions, and proposes implementation workflows for data science problems."
+  },
+  "graph": {
+    "id": "analytical-advisor-graph",
+    "goal_id": "analytical-advisor-goal",
+    "version": "1.0.0",
+    "entry_node": "intake",
+    "entry_points": {
+      "default": "intake"
+    },
+    "pause_nodes": [],
+    "terminal_nodes": [
+      "advisor"
+    ],
+    "conversation_mode": "continuous",
+    "identity_prompt": "You are a Principal Data Scientist focused on statistically valid analytical guidance. You recommend suitable methods, name the assumptions that matter, and outline practical workflows without overclaiming certainty.",
+    "nodes": [
+      {
+        "id": "intake",
+        "name": "Problem Intake",
+        "description": "Clarify the analytics problem and translate it into an analysis brief.",
+        "node_type": "event_loop",
+        "input_keys": [
+          "user_query"
+        ],
+        "output_keys": [
+          "analysis_brief"
+        ],
+        "nullable_output_keys": [],
+        "input_schema": {},
+        "output_schema": {},
+        "success_criteria": "The analysis brief clearly states the business question, target outcome, data context, decision horizon, and any major constraints or unknowns.",
+        "system_prompt": "You are the intake specialist for a Principal Data Scientist. Your job is to turn the user's natural-language query into a concise analysis brief. Ask at most 2 clarifying questions if needed. After clarification, call set_output(\"analysis_brief\", \"<clear paragraph describing the problem, data context, target, constraints, and success criteria>\").",
+        "tools": [],
+        "model": null,
+        "function": null,
+        "routes": {},
+        "max_retries": 3,
+        "retry_on": [],
+        "max_node_visits": 0,
+        "output_model": null,
+        "max_validation_retries": 2,
+        "client_facing": true
+      },
+      {
+        "id": "advisor",
+        "name": "Analytical Advisor",
+        "description": "Recommend statistically valid analytical techniques, assumptions, and workflow choices for the provided analysis brief.",
+        "node_type": "event_loop",
+        "input_keys": [
+          "analysis_brief"
+        ],
+        "output_keys": [
+          "recommended_analytical_techniques",
+          "key_assumptions",
+          "workflow_choices"
+        ],
+        "nullable_output_keys": [],
+        "input_schema": {},
+        "output_schema": {
+          "recommended_analytical_techniques": {
+            "type": "array",
+            "required": true,
+            "description": "List of recommended techniques and why they fit."
+          },
+          "key_assumptions": {
+            "type": "array",
+            "required": true,
+            "description": "List of assumptions or validity conditions."
+          },
+          "workflow_choices": {
+            "type": "array",
+            "required": true,
+            "description": "Ordered implementation workflow steps."
+          }
+        },
+        "success_criteria": "The response contains a statistically defensible recommendation, clearly states assumptions, and provides an implementation workflow that a data scientist could follow.",
+        "system_prompt": "You are a Principal Data Scientist acting as an Analytical Advisor. Return valid JSON only with these exact top-level keys: recommended_analytical_techniques, key_assumptions, workflow_choices. Recommend 1-3 techniques with a why, list 2-8 assumptions with relevance, and provide 4-8 workflow steps with implementation details. Prefer methods that match sample size, class imbalance, temporal ordering, causal vs predictive goals, and explainability needs.",
+        "tools": [],
+        "model": null,
+        "function": null,
+        "routes": {},
+        "max_retries": 3,
+        "retry_on": [],
+        "max_node_visits": 0,
+        "output_model": null,
+        "max_validation_retries": 2,
+        "client_facing": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "intake-to-advisor",
+        "source": "intake",
+        "target": "advisor",
+        "condition": "on_success",
+        "condition_expr": null,
+        "priority": 1,
+        "input_mapping": {}
+      }
+    ],
+    "max_steps": 20,
+    "max_retries_per_node": 3,
+    "description": "A Principal Data Scientist agent that recommends suitable analytical techniques, surfaces statistical assumptions, and proposes implementation workflows for data science problems.",
+    "created_at": "2026-03-28T00:00:00.000000"
+  },
+  "goal": {
+    "id": "analytical-advisor-goal",
+    "name": "Analytical Advisor",
+    "description": "Advise data scientists on suitable analytical techniques, critical assumptions, and implementation workflow choices for real-world problems.",
+    "status": "draft",
+    "success_criteria": [
+      {
+        "id": "method-fit",
+        "description": "Recommended techniques fit the problem type and decision need.",
+        "metric": "recommendation_relevance",
+        "target": ">=0.9",
+        "weight": 0.35,
+        "met": false
+      },
+      {
+        "id": "assumption-rigor",
+        "description": "Key assumptions and validity conditions are clearly identified.",
+        "metric": "assumption_coverage",
+        "target": ">=0.9",
+        "weight": 0.35,
+        "met": false
+      },
+      {
+        "id": "workflow-actionability",
+        "description": "The workflow is concrete enough for implementation.",
+        "metric": "workflow_actionability",
+        "target": ">=0.85",
+        "weight": 0.3,
+        "met": false
+      }
+    ],
+    "constraints": [
+      {
+        "id": "statistical-validity",
+        "description": "Recommendations must emphasize statistical validity and defensible inference.",
+        "constraint_type": "hard",
+        "category": "quality"
+      },
+      {
+        "id": "no-overclaiming",
+        "description": "Do not claim causality, generalization, or certainty unless warranted by the problem setup.",
+        "constraint_type": "hard",
+        "category": "safety"
+      },
+      {
+        "id": "structured-response",
+        "description": "Always return the three required response sections in structured form.",
+        "constraint_type": "hard",
+        "category": "format"
+      }
+    ],
+    "required_capabilities": [],
+    "context": {}
+  }
+}
