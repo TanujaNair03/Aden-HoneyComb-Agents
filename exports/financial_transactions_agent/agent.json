@@ -1,0 +1,153 @@
+{
+  "agent": {
+    "id": "financial_transactions_agent",
+    "name": "Financial Transactions Agent",
+    "version": "1.0.0",
+    "description": "A compliance-first transaction execution agent that checks approvals, controls, and authorization requirements before marking a financial transaction ready to execute."
+  },
+  "graph": {
+    "id": "financial-transactions-agent-graph",
+    "goal_id": "financial-transactions-goal",
+    "version": "1.0.0",
+    "entry_node": "intake",
+    "entry_points": {
+      "default": "intake"
+    },
+    "pause_nodes": [],
+    "terminal_nodes": [
+      "decision"
+    ],
+    "conversation_mode": "continuous",
+    "identity_prompt": "You are a compliance-first financial transactions agent. You do not bypass approvals, controls, or authorization, and you only mark transactions ready when governance requirements are clearly satisfied.",
+    "nodes": [
+      {
+        "id": "intake",
+        "name": "Transaction Intake",
+        "description": "Clarify the requested financial transaction and required approvals.",
+        "node_type": "event_loop",
+        "input_keys": [
+          "user_query"
+        ],
+        "output_keys": [
+          "transaction_brief"
+        ],
+        "nullable_output_keys": [],
+        "input_schema": {},
+        "output_schema": {},
+        "success_criteria": "The transaction brief clearly identifies the transaction type, amount, counterparties, purpose, known approvals, and missing information.",
+        "system_prompt": "You are the intake specialist for a controlled financial transactions agent. Ask at most 2 clarifying questions if key details are missing, then call set_output(\"transaction_brief\", \"<clear paragraph summarizing the transaction request, approval state, controls, and missing items>\").",
+        "tools": [],
+        "model": null,
+        "function": null,
+        "routes": {},
+        "max_retries": 3,
+        "retry_on": [],
+        "max_node_visits": 0,
+        "output_model": null,
+        "max_validation_retries": 2,
+        "client_facing": true
+      },
+      {
+        "id": "decision",
+        "name": "Controls and Authorization Review",
+        "description": "Evaluate whether a financial transaction is ready, pending approval, or blocked based on controls and authorization requirements.",
+        "node_type": "event_loop",
+        "input_keys": [
+          "transaction_brief"
+        ],
+        "output_keys": [
+          "transaction_summary",
+          "approval_status",
+          "human_approval_required",
+          "required_controls_and_authorizations",
+          "execution_workflow",
+          "audit_notes"
+        ],
+        "nullable_output_keys": [],
+        "input_schema": {},
+        "output_schema": {},
+        "success_criteria": "The response clearly states whether the transaction can proceed, names the required controls, and provides an auditable workflow.",
+        "system_prompt": "You are a financial transactions control specialist. Return valid JSON only with these exact keys: transaction_summary, approval_status, human_approval_required, required_controls_and_authorizations, execution_workflow, audit_notes. Use ready_to_execute only when approvals and controls are clearly satisfied; otherwise use pending_approval or blocked. Set human_approval_required to true whenever accountable human sign-off is still needed or should not be bypassed.",
+        "tools": [],
+        "model": null,
+        "function": null,
+        "routes": {},
+        "max_retries": 3,
+        "retry_on": [],
+        "max_node_visits": 0,
+        "output_model": null,
+        "max_validation_retries": 2,
+        "client_facing": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "intake-to-decision",
+        "source": "intake",
+        "target": "decision",
+        "condition": "on_success",
+        "condition_expr": null,
+        "priority": 1,
+        "input_mapping": {}
+      }
+    ],
+    "max_steps": 20,
+    "max_retries_per_node": 3,
+    "description": "A compliance-first transaction execution agent that checks approvals, controls, and authorization requirements before marking a financial transaction ready to execute.",
+    "created_at": "2026-03-28T00:00:00.000000"
+  },
+  "goal": {
+    "id": "financial-transactions-goal",
+    "name": "Controlled Financial Transactions",
+    "description": "Review transaction requests against approvals, controls, and authorization requirements before classifying them as ready, pending, or blocked.",
+    "status": "draft",
+    "success_criteria": [
+      {
+        "id": "control-coverage",
+        "description": "The decision covers the key controls and approval requirements.",
+        "metric": "control_coverage",
+        "target": ">=0.9",
+        "weight": 0.4,
+        "met": false
+      },
+      {
+        "id": "decision-discipline",
+        "description": "The transaction is not approved when controls are missing or unclear.",
+        "metric": "governance_discipline",
+        "target": ">=0.95",
+        "weight": 0.35,
+        "met": false
+      },
+      {
+        "id": "auditability",
+        "description": "The output is auditable and operationally actionable.",
+        "metric": "audit_quality",
+        "target": ">=0.9",
+        "weight": 0.25,
+        "met": false
+      }
+    ],
+    "constraints": [
+      {
+        "id": "no-governance-bypass",
+        "description": "Never bypass required approvals, controls, or authorization.",
+        "constraint_type": "hard",
+        "category": "compliance"
+      },
+      {
+        "id": "human-accountability",
+        "description": "Escalate missing or unclear approvals rather than assuming consent.",
+        "constraint_type": "hard",
+        "category": "safety"
+      },
+      {
+        "id": "audit-ready-output",
+        "description": "Every decision must contain auditable rationale and next steps.",
+        "constraint_type": "hard",
+        "category": "quality"
+      }
+    ],
+    "required_capabilities": [],
+    "context": {}
+  }
+}
