@@ -6,6 +6,7 @@ import json
 import shutil
 import sys
 from pathlib import Path
+from typing import Optional
 
 TEST_QUERY = (
     "Approve and process a supplier payment of USD 48,000 to Apex Components for "
@@ -40,7 +41,7 @@ def _render_markdown(output: dict) -> str:
     return "\n".join(lines)
 
 
-def _archive_export_dir(output_dir: Path | None = None) -> Path:
+def _archive_export_dir(output_dir: Optional[Path] = None) -> Path:
     """Zip the standard Hive export directory for marketplace upload."""
     package_dir = Path(__file__).resolve().parent
     output_dir = output_dir or package_dir.parent.parent / "dist"
@@ -128,7 +129,7 @@ def _validate() -> int:
     return 1
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: Optional[list[str]] = None) -> int:
     parser = argparse.ArgumentParser(
         description="Financial Transactions Agent - compliance-first execution readiness."
     )

@@ -61,9 +61,9 @@ Highlights:
 - focused on statistical validity and workflow quality
 
 Paths:
-- [Agent Notes](/Users/tanujanair/Desktop/HoneyComb/Data%20Science%20AI%20Agent/agents/analytical_advisor/README.md)
-- [Marketplace Notes](/Users/tanujanair/Desktop/HoneyComb/Data%20Science%20AI%20Agent/agents/analytical_advisor/marketplace.md)
-- [Runnable Export](/Users/tanujanair/Desktop/HoneyComb/Data%20Science%20AI%20Agent/exports/analytical_advisor/README.md)
+- [Agent Notes](agents/analytical_advisor/README.md)
+- [Marketplace Notes](agents/analytical_advisor/marketplace.md)
+- [Runnable Export](exports/analytical_advisor/README.md)
 
 ### 2. Financial Transactions Agent
 
@@ -76,9 +76,9 @@ Highlights:
 - audit-oriented workflow and dispositioning
 
 Paths:
-- [Agent Notes](/Users/tanujanair/Desktop/HoneyComb/Data%20Science%20AI%20Agent/agents/financial_transactions_agent/README.md)
-- [Marketplace Notes](/Users/tanujanair/Desktop/HoneyComb/Data%20Science%20AI%20Agent/agents/financial_transactions_agent/marketplace.md)
-- [Runnable Export](/Users/tanujanair/Desktop/HoneyComb/Data%20Science%20AI%20Agent/exports/financial_transactions_agent/README.md)
+- [Agent Notes](agents/financial_transactions_agent/README.md)
+- [Marketplace Notes](agents/financial_transactions_agent/marketplace.md)
+- [Runnable Export](exports/financial_transactions_agent/README.md)
 
 ---
 
@@ -128,6 +128,17 @@ Typical flow for a new agent:
 3. Add agent-facing docs under `agents/<agent_name>/`
 4. Validate locally
 5. Package into a `.zip` for upload
+
+## Smoke Tests
+
+Run the lightweight repo smoke tests with:
+
+```bash
+python -m unittest discover -s tests -p 'test_*.py'
+```
+
+These tests do not require a full Hive checkout. They verify that packaging helpers
+produce archives and that the top-level docs do not regress to machine-specific links.
 
 ---
 

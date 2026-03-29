@@ -2,6 +2,7 @@
 
 import os
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -11,12 +12,12 @@ class RuntimeConfig:
     model: str = os.environ.get("HIVE_AGENT_MODEL", "gemini/gemini-2.5-flash")
     temperature: float = 0.1
     max_tokens: int = 12000
-    api_key: str | None = (
+    api_key: Optional[str] = (
         os.environ.get("GEMINI_API_KEY")
         or os.environ.get("GOOGLE_API_KEY")
         or os.environ.get("OPENAI_API_KEY")
     )
-    api_base: str | None = os.environ.get("GEMINI_API_BASE") or os.environ.get(
+    api_base: Optional[str] = os.environ.get("GEMINI_API_BASE") or os.environ.get(
         "OPENAI_API_BASE"
     )
 
